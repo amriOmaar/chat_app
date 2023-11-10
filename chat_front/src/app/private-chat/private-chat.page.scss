@@ -1,0 +1,107 @@
+$sent_background: #0083fa;
+$received_background: #eaeaea;
+
+ion-toolbar {
+    --background: #0083fa;
+    --color: #fff;
+}
+
+form {
+    div {
+        display: flex;
+        align-items: center;
+    }
+
+    width: 100%;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    padding: 0px 15px;
+    padding-top: 25px;
+    padding-bottom: 5px;
+    border-top: solid 2px #dcdcdc;
+
+    ion-input {
+        border: solid 2px #dcdcdc;
+        border-radius: 25px;
+        height: 20px !important;
+        max-height: 20px;
+
+        ::placeholder {
+            color: red;
+            opacity: 1;
+        }
+    }
+}
+
+.sent {
+    color: #fff;
+    .message-wrapper {
+        display: flex;
+        justify-content: end;
+        width: 100%;
+    
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: $sent_background;
+        }
+    }
+
+    &:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-right: 15px solid transparent;
+        border-left: 13px solid $sent_background;
+        border-bottom: 15px solid $sent_background;
+        border-top: 5px solid transparent;
+        right: 5px;
+        bottom: 5px;
+        z-index: 999;
+    }
+}
+
+.received {
+    .message-wrapper {
+        display: flex;
+        justify-content: start;
+        width: 100%;
+    
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: $received_background;
+        }
+    }
+
+    &:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 15px solid transparent;
+        border-right: 13px solid $received_background;
+        border-bottom: 15px solid $received_background;
+        border-top: 5px solid transparent;
+        left: 5px;
+        bottom: 5px;
+        z-index: 999;
+    }
+}
+
+ion-input {
+    --padding-start: 15px;
+    font-size: 20px;
+}
+
+form button {
+    height: 100%;
+    font-size: 20px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: $sent_background;
+    margin-left: 15px;
+    margin-bottom: 20px;
+}

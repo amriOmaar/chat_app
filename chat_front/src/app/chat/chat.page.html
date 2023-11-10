@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Chat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-col>
+      <form style="display: flex;" #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <ion-input (click)="removeLine()" style="border: solid 2px grey; border-radius: 15px;" ngModel aria-placeholder="Search ..." name="search" type="text" required></ion-input>
+        <button style="padding: 0 15px; margin-left: 10px; border-radius: 5px; background: #0083fa; font-weight: 600; font-size: 16px;" type="submit">Search</button>
+      </form>
+
+      <ion-list lines="none">
+        <ion-item style="display: flex; cursor: pointer;" *ngFor="let user of shown" (click)="navigateToChat(user.username)">
+          <img style="border-radius: 50%; margin-right: 15px;" width="40" height="40" src="https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/default-avatar.png" alt="User">
+          <p style="font-size: 18px;">{{ user.username }}</p>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-grid>
+</ion-content>

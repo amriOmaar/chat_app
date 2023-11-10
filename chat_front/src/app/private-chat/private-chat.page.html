@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar background="#0083fa">
+    <ion-title>{{ this.receiverId }}</ion-title>
+    <ion-button>call</ion-button>
+    <ion-button (click)="videoCall()">video call</ion-button>
+    <div *ngIf="incomingCall">
+      <ion-button (click)="acceptCall()">answer call</ion-button>
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large"></ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list id="messages" style="height: calc(100% - 90px); overflow: scroll;" lines="none">
+    <ion-item [attr.class]="(message.sender == this.senderId) ? 'sent' : 'received'" *ngFor="let message of messages">
+      <div class="message-wrapper">
+        <div class="message">
+          {{ message.content }}
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+  <!-- <div style="height: 500px; width: 500px;;">
+    <video #remoteVideo autoplay style="width: 200px; height: 200px; background-color: red"></video>
+    <video #localVideo autoplay style="width: 200px; height: 200px; background-color: blue"></video>
+  </div> -->
+  <ion-content>
+    <!-- <video controls="controls" preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline"
+      class="videoPlayer">
+      <source src="./assets/videos/Part_1.mp4" type="video/mp4" />
+    </video> -->
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <video #remoteVideo autoplay style="width: 200px; height: 200px; border:1px solid red;">
+          </video>
+
+        </ion-col>
+
+        <ion-col>
+          <video #localVideo autoplay style="width: 200px; height: 200px; border: 1px solid blue; "></video>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <div>
+      <div style="height: 20px; margin-bottom: 20px;" id="input-wrapper">
+        <ion-input (click)="removeLine()" placeholder="Aa" ngModel name="message" type="text" expand="block"
+          required></ion-input>
+      </div>
+      <button [disabled]="!f.valid" type="submit">Send</button>
+    </div>
+  </form>
+</ion-content>
