@@ -1,5 +1,6 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { SignalService } from './signal.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,9 @@ export class CallService {
 
   connection: RTCPeerConnection;
   remoteConnection: RTCPeerConnection;
+  receiverId: any;
 
-  constructor(private signalingService: SignalService) {
+  constructor(private signalingService: SignalService, private route: ActivatedRoute) {
   }
 
   private async _initConnection(remoteVideo: ElementRef, localVideo: ElementRef): Promise<void> {
@@ -72,7 +74,7 @@ export class CallService {
 
   public async handleCandidate(candidate: RTCIceCandidate): Promise<void> {
     if (candidate) {
-      await this.connection.addIceCandidate(new RTCIceCandidate(candidate));
+      await this.connection.addIceCandidate(candidate);
     }
   }
 
@@ -106,7 +108,10 @@ export class CallService {
           type: 'candidate',
           candidate: event.candidate.toJSON(),
         };
-        // this.signalingService.sendCandidate(payload);
+        this.route.queryParams.subscribe(params => {
+          this.receiverId = params["receiverId"];
+        });
+        this.signalingService.sendCandidate(payload, this.receiverId);
       }
     };
   }

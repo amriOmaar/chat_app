@@ -23,7 +23,8 @@ export class SignalService {
     this.socket.emit('answer', payload, to);
   }
 
-  sendCandidate() {
-    
+  sendCandidate(payload: any, to: any) {
+    this.socket.emit('ice-candidate', payload, to);
+
   }
 }

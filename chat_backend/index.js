@@ -19,7 +19,7 @@ const io = socketIo(server,
 
 
 
-const users = [];
+let users = [];
 io.on("connection", (socket) => {
   socket.on('setUserName', function (username) {
     let exists = false;
