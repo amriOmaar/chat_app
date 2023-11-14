@@ -40,7 +40,6 @@ export class CallService {
     const offer = await this.connection.createOffer();
 
     await this.connection.setLocalDescription(offer);
-    await this._getStreams(remoteVideo, localVideo);
     this.signalingService.senderOffer(offer, to);
   }
 
@@ -143,13 +142,60 @@ export class CallService {
   }
 
   endCall(remoteVideo: any, localVideo: any) {
-    this.stream.getTracks().forEach((track) => track.stop());
+    this.stream.getTracks().forEach((track) => {
+      track.stop();
+      track.enabled = false;
+    });
     localVideo.srcObject = null;
 
+    console.log(localVideo);
     if (this.remoteStream) {
-      this.remoteStream.getTracks().forEach((track) => track.stop());
+      this.remoteStream.getTracks().forEach((track) => {
+        track.stop();
+        track.enabled = false;
+      });
     }
     remoteVideo.srcObject = null;
+    // navigator.mediaDevices.getUserMedia({ video: false, audio: false })
+    //   .then((stream) => {
+    //     // Process the stream if needed
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error accessing media devices:', error);
+    //   })
+    //   .finally(() => {
+    //     // Revoke permissions
+    //     navigator.mediaDevices.getUserMedia({ video: false, audio: false });
+    //   });
+    this.remoteStream = null;
+    this.stream = null;
     this.connection.close();
+  }
+
+  toggleMic() {
+    const audioTrack = this.stream.getAudioTracks()[0];
+    if (audioTrack) {
+      audioTrack.enabled = !audioTrack.enabled;
+      if (audioTrack.enabled) {
+        console.log('Microphone unmuted');
+      } else {
+        console.log('Microphone muted');
+      }
+    }
+  }
+  toggleCam() {
+    const videoTrack = this.stream.getVideoTracks()[0];
+
+    if (videoTrack) {
+      videoTrack.enabled = !videoTrack.enabled;
+
+      // Optionally, you can add UI updates or log statements to indicate the camera state
+      if (videoTrack.enabled) {
+        console.log('Camera enabled');
+      } else {
+        console.log('Camera disabled');
+      }
+    }
+
   }
 }

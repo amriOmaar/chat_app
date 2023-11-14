@@ -9,7 +9,6 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db.js');
 const userRouter = require('./Routes/UserRouter.js');
 const messageRouter = require('./Routes/MessageRouter.js');
-const { off } = require('process');
 
 const app = express();
 const server = http.createServer(app);

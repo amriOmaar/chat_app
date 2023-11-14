@@ -84,6 +84,7 @@ export class PrivateChatPage implements OnInit {
       this.inCall = false;
       this.callAccepted = false;
       this.callService.endCall(this.remoteVideo, this.localVideo);
+
     });
   }
 
@@ -128,6 +129,12 @@ export class PrivateChatPage implements OnInit {
     this.callAccepted = false;
     this.signalService.endCall(this.receiverId);
     this.callService.endCall(this.remoteVideo, this.localVideo);
+  }
+  toggleMic() {
+    this.callService.toggleMic();
+  }
+  toggleCamera() {
+    this.callService.toggleCam();
   }
 
   async getMessages() {
