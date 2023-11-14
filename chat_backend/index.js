@@ -86,6 +86,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on('end-call', (to) => {
+    const receiver = users.find((user) => user.username === to);
+    console.log("end call", to);
+
+    if (receiver) {
+      console.log("end call", receiver);
+
+      socket.to(receiver.userID).emit("end-call", socket.id);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("DISCONNECTED !!!");
     users = users.filter((user) => user.userID !== socket.id);

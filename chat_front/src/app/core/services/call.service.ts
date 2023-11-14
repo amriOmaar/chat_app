@@ -19,7 +19,8 @@ export class CallService {
   };
 
   connection: RTCPeerConnection;
-  remoteConnection: RTCPeerConnection;
+  stream: MediaStream;
+  remoteStream: MediaStream;
   receiverId: any;
 
   constructor(private signalingService: SignalService, private route: ActivatedRoute) {
@@ -117,31 +118,38 @@ export class CallService {
   }
 
   private async _getStreams(remoteVideo: ElementRef, localVideo: ElementRef): Promise<void> {
-    const stream = await navigator.mediaDevices.getUserMedia({
+    this.stream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      // audio: true,
+      audio: true,
     });
-    const remoteStream = new MediaStream();
+    this.remoteStream = new MediaStream();
 
-    localVideo.nativeElement.srcObject = stream;
+    localVideo.nativeElement.srcObject = this.stream;
 
 
-    remoteVideo.nativeElement.srcObject = remoteStream;
+    remoteVideo.nativeElement.srcObject = this.remoteStream;
 
     this.connection.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track);
+        this.remoteStream.addTrack(track);
       });
     };
 
 
-    stream.getTracks().forEach((track) => {
-      this.connection.addTrack(track, stream);
+    this.stream.getTracks().forEach((track) => {
+      this.connection.addTrack(track, this.stream);
     });
-
-
 
   }
 
+  endCall(remoteVideo: any, localVideo: any) {
+    this.stream.getTracks().forEach((track) => track.stop());
+    localVideo.srcObject = null;
 
+    if (this.remoteStream) {
+      this.remoteStream.getTracks().forEach((track) => track.stop());
+    }
+    remoteVideo.srcObject = null;
+    this.connection.close();
+  }
 }

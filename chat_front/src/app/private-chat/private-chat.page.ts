@@ -35,6 +35,7 @@ export class PrivateChatPage implements OnInit {
   messages: Message[] = [];
   incomingCall = false;
   callAccepted = false;
+  inCall = false;
 
   constructor(private route: ActivatedRoute, private _http: HttpClient, private router: Router, private callService: CallService, private signalService: SignalService) {
     this.socket = io('http://localhost:3000');
@@ -79,6 +80,11 @@ export class PrivateChatPage implements OnInit {
       const receivedCandidate = new RTCIceCandidate(data.candidate);
       this.callService.handleCandidate(receivedCandidate);
     });
+    this.socket.on('end-call', (data) => {
+      this.inCall = false;
+      this.callAccepted = false;
+      this.callService.endCall(this.remoteVideo, this.localVideo);
+    });
   }
 
 
@@ -99,11 +105,14 @@ export class PrivateChatPage implements OnInit {
     this.socket.emit('setUserName', JSON.parse(ret.value || '{}'));
   }
   async videoCall() {
+    this.inCall = true;
     await this.callService.makeCall(this.localVideo, this.remoteVideo, this.receiverId); // Modify your CallService method to handle video calls
   }
 
   async acceptCall() {
     this.callAccepted = true;
+    this.incomingCall = false;
+    this.inCall = true;
     // Process any queued offers
     this.incomingOffers.forEach(async ({ offer, to }) => {
       console.log("accepting call from", to);
@@ -113,7 +122,12 @@ export class PrivateChatPage implements OnInit {
     });
     // Clear the queue
     this.incomingOffers = [];
-
+  }
+  hungUp() {
+    this.inCall = false;
+    this.callAccepted = false;
+    this.signalService.endCall(this.receiverId);
+    this.callService.endCall(this.remoteVideo, this.localVideo);
   }
 
   async getMessages() {

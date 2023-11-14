@@ -1,11 +1,17 @@
 <ion-header [translucent]="true">
   <ion-toolbar background="#0083fa">
     <ion-title>{{ this.receiverId }}</ion-title>
-    <ion-button>call</ion-button>
-    <ion-button (click)="videoCall()">video call</ion-button>
-    <div *ngIf="incomingCall">
-      <ion-button (click)="acceptCall()">answer call</ion-button>
+    <!-- <ion-button>call</ion-button> -->
 
+    <div *ngIf="!inCall">
+      <ion-button (click)="videoCall()">video call</ion-button>
+      <div *ngIf="incomingCall">
+        <ion-button (click)="acceptCall()">answer call</ion-button>
+      </div>
+    </div>
+
+    <div *ngIf="inCall">
+      <ion-button (click)="hungUp()">Hung up</ion-button>
     </div>
   </ion-toolbar>
 </ion-header>

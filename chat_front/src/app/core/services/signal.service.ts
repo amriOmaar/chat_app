@@ -25,6 +25,9 @@ export class SignalService {
 
   sendCandidate(payload: any, to: any) {
     this.socket.emit('ice-candidate', payload, to);
+  }
 
+  endCall(to) {
+    this.socket.emit('end-call', to);
   }
 }
